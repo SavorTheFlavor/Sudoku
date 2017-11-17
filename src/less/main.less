@@ -1,0 +1,83 @@
+@shadowBottom: 0 0.2rem 0.3rem rgba(45,45,45,199);
+@shadowTop: 0 -0.1rem 0.2rem rgba(45,45,45,199);
+/*1rem就是一个字体像素大小，也就是下面设置的font-size*/
+html{
+	font-size: 14px;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+	background: #eee;
+	font-family: "Consolas","微软雅黑";
+	user-select:none;
+	max-width: 450px;
+	>* {
+		max-width: 450px;
+	}
+
+}
+
+.container{
+	padding-left: 7%;
+
+	.row{
+		>span{
+			display: inline-block;/*inline(outside) and block(inside), at same line but display as a block*/
+			cursor: pointer;
+			text-align: center;
+			width: 10%;
+			height: 24px;
+			line-height: 24px;
+			border:1px solid #ccc;
+			border-right-width: 0;
+			border-bottom-width: 0;
+			background: #fff;
+
+			&.col_g_right{
+				border-right-width: 3px;
+			}
+		}
+
+		&.row_g_bottom{
+			>span{
+				border-bottom-width: 3px;
+			}
+		}
+
+	}
+
+}
+
+.dashboard{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 1rem 0;
+	background: steelblue;
+	box-sizing: border-box;
+	box-shadow: @shadowTop;
+	height: 3rem;
+	.buttons {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		button{
+			float: left;
+			width: 25%;
+			height: 3rem;
+			font-size: 1.3rem;
+			color: white;
+			background:transparent;
+		}
+
+	}
+
+}
+
+
+.hidden{
+	display:none;
+}
