@@ -1,11 +1,12 @@
 //生成数独解决方案
 const Toolkit = require("./toolkit")
 
-class Generator{
+module.exports = class Generator{
 	//新语法啊，不习惯
 	generate(){
+		//生成的矩阵含有0说明生成失败，则让其继续生成
 		while(!this.internalGenerate()){
-			
+
 		}
 	}
 
@@ -64,8 +65,4 @@ class Generator{
 		return false;
 	}
 
-}
-
-const generator = new Generator();
-generator.generate();
-console.log(generator.matrix);
+};
