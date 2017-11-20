@@ -1,4 +1,5 @@
 const Toolkit = require("../core/toolkit")
+const Sudoku = require("../core/sudoku")
 
 
 class Grid{
@@ -7,7 +8,13 @@ class Grid{
 	}
 
 	build(){
-		const matrixTemp = Toolkit.matrix.makeMatrix();
+
+		// const generator = new Generator();
+		// generator.generate();
+		// const matrixTemp = generator.matrix;
+		const sudoku = new Sudoku();
+		sudoku.make();
+		const matrixTemp = sudoku.puzzleMatrix;
 
 		const rowGroupClasses = ["row_g_top","row_g_middle","row_g_bottom"]
 		const colGroupClasses = ["col_g_left","col_g_center","col_g_right"]
@@ -16,6 +23,7 @@ class Grid{
 		 (val,colIndex) => {
 		 	return $('<span>')
 		 	.addClass(colGroupClasses[colIndex%3])
+		 	.addClass(val?"fixed":"empty")
 		 	.text(val);}
 		 ));
 		const matrix = cells.map((row,rowIndex) => 

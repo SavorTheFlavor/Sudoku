@@ -29,6 +29,13 @@ body > * {
   border-bottom-width: 0;
   background: #fff;
 }
+.container .row > span.empty {
+  color: white;
+}
+.container .row > span.fixed {
+  color: #d8386a;
+  background: #000;
+}
 .container .row > span.col_g_right {
   border-right-width: 3px;
 }
