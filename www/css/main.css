@@ -39,6 +39,12 @@ body > * {
 .container .row > span.col_g_right {
   border-right-width: 3px;
 }
+.container .row > span.mark1 {
+  background: lightpink;
+}
+.container .row > span.mark2 {
+  background: lightgreen;
+}
 .container .row.row_g_bottom > span {
   border-bottom-width: 3px;
 }
@@ -66,6 +72,46 @@ body > * {
   font-size: 1.3rem;
   color: white;
   background: transparent;
+}
+.popup-num {
+  padding-left: 7%;
+}
+.popup-num .row > span {
+  display: inline-block;
+  /*inline(outside) and block(inside), at same line but display as a block*/
+  cursor: pointer;
+  text-align: center;
+  width: 10%;
+  height: 24px;
+  line-height: 24px;
+  border: 1px solid #ccc;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  background: #fff;
+}
+.popup-num .row > span.empty {
+  color: white;
+}
+.popup-num .row > span.fixed {
+  color: #d8386a;
+  background: #000;
+}
+.popup-num .row > span.col_g_right {
+  border-right-width: 3px;
+}
+.popup-num .row > span.mark1 {
+  background: lightpink;
+}
+.popup-num .row > span.mark2 {
+  background: lightgreen;
+}
+.popup-num .row.row_g_bottom > span {
+  border-bottom-width: 3px;
+}
+.popup-num .row > span {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
 }
 .hidden {
   display: none;
