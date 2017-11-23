@@ -38,6 +38,7 @@ body > * {
 }
 .container .row > span.col_g_right {
   border-right-width: 3px;
+  border-right-color: blue;
 }
 .container .row > span.mark1 {
   background: lightpink;
@@ -47,6 +48,7 @@ body > * {
 }
 .container .row.row_g_bottom > span {
   border-bottom-width: 3px;
+  border-bottom-color: blue;
 }
 .dashboard {
   position: absolute;
@@ -75,6 +77,8 @@ body > * {
 }
 .popup-num {
   padding-left: 7%;
+  position: absolute;
+  padding-left: 0;
 }
 .popup-num .row > span {
   display: inline-block;
@@ -98,6 +102,7 @@ body > * {
 }
 .popup-num .row > span.col_g_right {
   border-right-width: 3px;
+  border-right-color: blue;
 }
 .popup-num .row > span.mark1 {
   background: lightpink;
@@ -107,6 +112,7 @@ body > * {
 }
 .popup-num .row.row_g_bottom > span {
   border-bottom-width: 3px;
+  border-bottom-color: blue;
 }
 .popup-num .row > span {
   width: 40px;

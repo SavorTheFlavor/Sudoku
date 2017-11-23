@@ -191,8 +191,13 @@ module.exports = function () {
 
 
 var Grid = __webpack_require__(2);
+var PopupNumbers = __webpack_require__(5);
+
 var grid = new Grid($(".container"));
 grid.build();
+
+var popupnumbers = new PopupNumbers($("#popupNumbers"));
+grid.bindPopup(popupnumbers);
 
 /***/ }),
 /* 2 */
@@ -238,6 +243,15 @@ var Grid = function () {
 				return $('<div>').addClass(rowGroupClasses[rowIndex % 3]).addClass('row').append(row);
 			});
 			this.container.append(matrix);
+		}
+	}, {
+		key: "bindPopup",
+		value: function bindPopup(popupNumbers) {
+			//由于span是动态生成的，不能直接绑定到span上，采用jQuery事件代理的方式
+			this.container.on("click", "span", function (e) {
+				var $cell = $(e.target);
+				popupNumbers.popup($cell);
+			});
 		}
 	}]);
 
@@ -380,6 +394,45 @@ module.exports = function () {
 	}]);
 
 	return Generator;
+}();
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+	function PopupNumbers($panel) {
+		_classCallCheck(this, PopupNumbers);
+
+		//去掉原来的hidden属性而使用本身的hide()
+		this._$panel = $panel.hide().removeClass("hidden");
+	}
+
+	_createClass(PopupNumbers, [{
+		key: "popup",
+		value: function popup($cell) {
+			//在$cell的位置弹出这个UI
+			var _$cell$position = $cell.position(),
+			    left = _$cell$position.left,
+			    top = _$cell$position.top;
+
+			console.log("left:" + left);
+			//注意....那个是``````````不是''
+			this._$panel.css({
+				left: left + "px",
+				top: top + "px"
+			}).show();
+		}
+	}]);
+
+	return PopupNumbers;
 }();
 
 /***/ })

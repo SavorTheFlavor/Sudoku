@@ -33,6 +33,14 @@ class Grid{
 			.append(row);});
 		this.container.append(matrix);
 	}
+
+	bindPopup(popupNumbers){
+		//由于span是动态生成的，不能直接绑定到span上，采用jQuery事件代理的方式
+		this.container.on("click","span",e => {
+			const $cell = $(e.target);
+			popupNumbers.popup($cell);
+		});
+	}
 }
 
 module.exports = Grid;

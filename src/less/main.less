@@ -45,6 +45,7 @@ body{
 
 			&.col_g_right{
 				border-right-width: 3px;
+				border-right-color: blue;
 			}
 			&.mark1{
 				background: lightpink;
@@ -57,6 +58,7 @@ body{
 		&.row_g_bottom{
 			>span{
 				border-bottom-width: 3px;
+				border-bottom-color: blue;
 			}
 		}
 
@@ -95,6 +97,8 @@ body{
 @popupCellSize:40px;
 .popup-num{
 	.container();
+	position: absolute;
+	padding-left: 0;
 	.row{
 		>span{
 			width: @popupCellSize;
