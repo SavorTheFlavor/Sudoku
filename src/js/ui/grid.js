@@ -39,6 +39,10 @@ class Grid{
 		//由于span是动态生成的，不能直接绑定到span上，采用jQuery事件代理的方式
 		this.container.on("click","span",e => {
 			const $cell = $(e.target);
+			//is .fixed选择中的元素
+			if($cell.is(".fixed")){
+				return;
+			}
 			popupNumbers.popup($cell);
 		});
 	}
@@ -90,13 +94,17 @@ class Grid{
 	 重置到游戏开始时的布局
 	*/
 	reset(){
-
+		this.container.find("span:not(.fixed)")
+					  .removeClass("error mark1 mark2")
+					  .addClass("empty")
+					  .text(0);
 	}
 	/**
 	  清除错误标志
 	*/
 	clear(){
-
+		this.container.find("span.error")
+					  .removeClass("error");
 	}
 }
 

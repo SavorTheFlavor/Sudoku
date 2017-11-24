@@ -5,7 +5,7 @@ function checkArray(arr){
 	const marks = new Array(length);
 	marks.fill(true);
 
-	for (let i = 0; i < length - 1; i++) {
+	for (let i = 0; i < length; i++) {
 		const v = arr[i];
 		//已标志为false则跳过
 		if(!marks[i]){
@@ -18,7 +18,7 @@ function checkArray(arr){
 			continue;
 		}
 		//是否重复
-		for (let j = i+1; j < length; j++) {
+		for (let j = i+1; j < length - 1; j++) {
 			if(arr[j] === v){
 				marks[j] = false;
 				marks[i] = false;

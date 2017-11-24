@@ -200,7 +200,9 @@ var popupnumbers = new PopupNumbers($("#popupNumbers"));
 grid.bindPopup(popupnumbers);
 
 $("#check").on("click", function (e) {
-	grid.check();
+	if (grid.check()) {
+		alert("你成功了！！");
+	}
 });
 $("#reset").on("click", function (e) {
 	grid.reset();
@@ -244,7 +246,7 @@ var Grid = function () {
 			// const matrixTemp = generator.matrix;
 			var sudoku = new Sudoku();
 			sudoku.make();
-			var matrixTemp = sudoku.puzzleMatrix;
+			var matrixTemp = sudoku.solutionMatrix;
 
 			var rowGroupClasses = ["row_g_top", "row_g_middle", "row_g_bottom"];
 			var colGroupClasses = ["col_g_left", "col_g_center", "col_g_right"];
@@ -265,6 +267,10 @@ var Grid = function () {
 			//由于span是动态生成的，不能直接绑定到span上，采用jQuery事件代理的方式
 			this.container.on("click", "span", function (e) {
 				var $cell = $(e.target);
+				//is .fixed选择中的元素
+				if ($cell.is(".fixed")) {
+					return;
+				}
 				popupNumbers.popup($cell);
 			});
 		}
@@ -306,6 +312,7 @@ var Grid = function () {
 			this.container.children().each(function (rowIndex, div) {
 				$(div).children().each(function (colIndex, span) {
 					var $span = $(span);
+					//is(选择器选择的元素) .fixed可以选中含有fixed的span
 					if ($span.is(".fixed") || marks[rowIndex][colIndex]) {
 						$span.removeClass("error");
 					} else {
@@ -320,14 +327,18 @@ var Grid = function () {
 
 	}, {
 		key: "reset",
-		value: function reset() {}
+		value: function reset() {
+			this.container.find("span:not(.fixed)").removeClass("error mark1 mark2").addClass("empty").text(0);
+		}
 		/**
     清除错误标志
   */
 
 	}, {
 		key: "clear",
-		value: function clear() {}
+		value: function clear() {
+			this.container.find("span.error").removeClass("error");
+		}
 	}]);
 
 	return Grid;
@@ -628,11 +639,6 @@ module.exports = function () {
 		//绑定popupnumbers面板事件
 		this._$panel.on("click", "span", function (e) {
 			var $span = $(e.target);
-
-			if ($span.hasClass("fixed")) {
-				_this.hide();
-				return;
-			}
 
 			//mark1、mark2的样式
 			if ($span.hasClass("mark1")) {
