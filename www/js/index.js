@@ -409,26 +409,69 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 module.exports = function () {
 	function PopupNumbers($panel) {
+		var _this = this;
+
 		_classCallCheck(this, PopupNumbers);
 
 		//去掉原来的hidden属性而使用本身的hide()
 		this._$panel = $panel.hide().removeClass("hidden");
+
+		//绑定popupnumbers面板事件
+		this._$panel.on("click", "span", function (e) {
+			var $span = $(e.target);
+
+			//mark1、mark2的样式
+			if ($span.hasClass("mark1")) {
+				if (_this._$targetCell.hasClass("mark1")) {
+					_this._$targetCell.removeClass("mark1");
+				} else {
+					_this._$targetCell.addClass("mark1");
+				}
+				_this.hide();
+				return;
+			}
+			if ($span.hasClass("mark2")) {
+				if (_this._$targetCell.hasClass("mark2")) {
+					_this._$targetCell.removeClass("mark2");
+				} else {
+					_this._$targetCell.addClass("mark2");
+				}
+				_this.hide();
+				return;
+			}
+			//empty，清空数字和mark
+			if ($span.hasClass("empty")) {
+				_this._$targetCell.removeClass("mark1").removeClass("mark2").addClass("empty").text(0);
+				_this.hide();
+				return;
+			}
+			//回填数字1-9
+			_this._$targetCell.removeClass("empty").text($span.text());
+			_this.hide();
+		});
 	}
 
 	_createClass(PopupNumbers, [{
 		key: "popup",
 		value: function popup($cell) {
 			//在$cell的位置弹出这个UI
+			this._$targetCell = $cell;
+
 			var _$cell$position = $cell.position(),
 			    left = _$cell$position.left,
 			    top = _$cell$position.top;
-
-			console.log("left:" + left);
 			//注意....那个是``````````不是''
+
+
 			this._$panel.css({
 				left: left + "px",
 				top: top + "px"
 			}).show();
+		}
+	}, {
+		key: "hide",
+		value: function hide() {
+			this._$panel.hide();
 		}
 	}]);
 
