@@ -33,7 +33,7 @@ const Toolkit = require("./toolkit");
 //处理：对matrix 行、列。宫进行检查
 //输出：检查是否成功，marks
 
-class Checker{
+module.exports = class Checker{
 	constructor(matrix){
 		this._matrix = matrix;
 		this._matrixMarks = Toolkit.matrix.makeMatrix(true);
@@ -106,15 +106,3 @@ class Checker{
 	}
 }
 
-const Generator = require("./generator");
-const gen = new Generator();
-gen.generate();
-const matrix = gen.matrix;
-const checker = new Checker(matrix);
-
-matrix[1][1] = 0;
-matrix[2][3] = matrix[3][5] = 5;
-const checker2 = new Checker(matrix);
-console.log("check result:"+checker.check());
-console.log("check2 result:"+checker2.check());
-console.log(checker2.matrixMarks)

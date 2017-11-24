@@ -6,3 +6,17 @@ grid.build();
 
 const popupnumbers = new PopupNumbers($("#popupNumbers"));
 grid.bindPopup(popupnumbers);
+
+$("#check").on("click", e => {
+	grid.check();
+})
+$("#reset").on("click", e => {
+	grid.reset();
+})
+$("#clear").on("click", e => {
+	grid.clear();
+})
+
+$("#restart").on("click", e => {
+	grid.restart();
+})

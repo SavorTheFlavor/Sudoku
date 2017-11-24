@@ -191,13 +191,27 @@ module.exports = function () {
 
 
 var Grid = __webpack_require__(2);
-var PopupNumbers = __webpack_require__(5);
+var PopupNumbers = __webpack_require__(6);
 
 var grid = new Grid($(".container"));
 grid.build();
 
 var popupnumbers = new PopupNumbers($("#popupNumbers"));
 grid.bindPopup(popupnumbers);
+
+$("#check").on("click", function (e) {
+	grid.check();
+});
+$("#reset").on("click", function (e) {
+	grid.reset();
+});
+$("#clear").on("click", function (e) {
+	grid.clear();
+});
+
+$("#restart").on("click", function (e) {
+	grid.restart();
+});
 
 /***/ }),
 /* 2 */
@@ -212,6 +226,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Toolkit = __webpack_require__(0);
 var Sudoku = __webpack_require__(3);
+var Checker = __webpack_require__(5);
 
 var Grid = function () {
 	function Grid(container) {
@@ -253,6 +268,66 @@ var Grid = function () {
 				popupNumbers.popup($cell);
 			});
 		}
+		/**
+   重新生成游戏
+  */
+
+	}, {
+		key: "restart",
+		value: function restart() {
+			this.container.empty();
+			this.build();
+		}
+		/**
+    检查解密结果
+  */
+
+	}, {
+		key: "check",
+		value: function check() {
+			//从页面获取要检查的数据
+			var $rows = this.container.children();
+			var data = $rows.map(function (rowIndex, div) {
+				return $(div).children().map(function (colIndex, span) {
+					//不是scala...要加return...
+					return parseInt($(span).text()) || 0;
+				});
+			}).toArray().map(function ($data) {
+				return $data.toArray();
+			});
+
+			var checker = new Checker(data);
+			if (checker.check()) {
+				return true;
+			}
+
+			//检查不成功，对错误的地方进行标记
+			var marks = checker.matrixMarks;
+			this.container.children().each(function (rowIndex, div) {
+				$(div).children().each(function (colIndex, span) {
+					var $span = $(span);
+					if ($span.is(".fixed") || marks[rowIndex][colIndex]) {
+						$span.removeClass("error");
+					} else {
+						$span.addClass("error");
+					}
+				});
+			});
+		}
+		/**
+   重置到游戏开始时的布局
+  */
+
+	}, {
+		key: "reset",
+		value: function reset() {}
+		/**
+    清除错误标志
+  */
+
+	}, {
+		key: "clear",
+		value: function clear() {}
 	}]);
 
 	return Grid;
@@ -407,6 +482,140 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+//检查解决方案
+function checkArray(arr) {
+	var length = arr.length;
+	var marks = new Array(length);
+	marks.fill(true);
+
+	for (var i = 0; i < length - 1; i++) {
+		var v = arr[i];
+		//已标志为false则跳过
+		if (!marks[i]) {
+			continue;
+		}
+
+		//是否有效 0无效，1-9有效
+		if (v === 0) {
+			marks[i] = false;
+			continue;
+		}
+		//是否重复
+		for (var j = i + 1; j < length; j++) {
+			if (arr[j] === v) {
+				marks[j] = false;
+				marks[i] = false;
+			}
+		}
+	}
+	return marks;
+}
+
+var Toolkit = __webpack_require__(0);
+//输入: matrix，用户完成后的矩阵
+//处理：对matrix 行、列。宫进行检查
+//输出：检查是否成功，marks
+
+module.exports = function () {
+	function Checker(matrix) {
+		_classCallCheck(this, Checker);
+
+		this._matrix = matrix;
+		this._matrixMarks = Toolkit.matrix.makeMatrix(true);
+	}
+
+	_createClass(Checker, [{
+		key: "check",
+		value: function check() {
+			this.checkRows();
+			this.checkCols();
+			this.checkBoxes();
+
+			//Array.prototype.every(checkFn)，使用checkFn对每个元素进行检查，只要有一个返回false就返回false
+			this._success = this._matrixMarks.every(function (row) {
+				return row.every(function (mark) {
+					return mark;
+				});
+			});
+			return this._success;
+		}
+	}, {
+		key: "checkRows",
+		value: function checkRows() {
+			for (var i = 0; i < 9; i++) {
+				var row = this._matrix[i];
+				var marks = checkArray(row);
+
+				//把检查结果弄到_matrixMarks上去
+				for (var j = 0; j < 9; j++) {
+					if (!marks[j]) {
+						this._matrixMarks[i][j] = false;
+					}
+				}
+			}
+		}
+	}, {
+		key: "checkCols",
+		value: function checkCols() {
+			for (var colIndex = 0; colIndex < 9; colIndex++) {
+				var cols = [];
+				for (var i = 0; i < 9; i++) {
+					cols[i] = this._matrix[i][colIndex];
+				}
+
+				var marks = checkArray(cols);
+				//把检查结果弄到_matrixMarks上去
+				for (var j = 0; j < 9; j++) {
+					if (!marks[j]) {
+						this._matrixMarks[j][colIndex] = false;
+					}
+				}
+			}
+		}
+	}, {
+		key: "checkBoxes",
+		value: function checkBoxes() {
+			for (var boxIndex = 0; boxIndex < 9; boxIndex++) {
+				var boxes = Toolkit.box.getBoxCells(this._matrix, boxIndex);
+				var marks = checkArray(boxes);
+
+				for (var cellIndex = 0; cellIndex < 9; cellIndex++) {
+					if (!marks[cellIndex]) {
+						var _Toolkit$box$convertF = Toolkit.box.convertFromBoxIndex(boxIndex, cellIndex),
+						    rowIndex = _Toolkit$box$convertF.rowIndex,
+						    colIndex = _Toolkit$box$convertF.colIndex;
+
+						this._matrixMarks[rowIndex][colIndex] = false;
+					}
+				}
+			}
+		}
+	}, {
+		key: "matrixMarks",
+		get: function get() {
+			return this._matrixMarks;
+		}
+	}, {
+		key: "isSuccess",
+		get: function get() {
+			return this._success;
+		}
+	}]);
+
+	return Checker;
+}();
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 module.exports = function () {
 	function PopupNumbers($panel) {
 		var _this = this;
@@ -419,6 +628,11 @@ module.exports = function () {
 		//绑定popupnumbers面板事件
 		this._$panel.on("click", "span", function (e) {
 			var $span = $(e.target);
+
+			if ($span.hasClass("fixed")) {
+				_this.hide();
+				return;
+			}
 
 			//mark1、mark2的样式
 			if ($span.hasClass("mark1")) {

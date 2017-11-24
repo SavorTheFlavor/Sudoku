@@ -8,6 +8,11 @@ module.exports = class PopupNumbers{
 		this._$panel.on("click","span",e => {
 			const $span = $(e.target);
 
+			if($span.hasClass("fixed")){
+				this.hide();
+				return;
+			}
+
 			//mark1、mark2的样式
 			if($span.hasClass("mark1")){
 				if(this._$targetCell.hasClass("mark1")){
@@ -38,7 +43,7 @@ module.exports = class PopupNumbers{
 			}						
 			//回填数字1-9
 			this._$targetCell.removeClass("empty")
-							  .text($span.text());
+							 .text($span.text());
 			this.hide();
 		});
 	}

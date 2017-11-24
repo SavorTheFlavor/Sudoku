@@ -34,6 +34,7 @@ body{
 			border-bottom-width: 0;
 			background: #fff;
 
+			//&代表它外面的那个选择器，也就是span
 			&.empty{
 				color: white;
 			}
@@ -52,6 +53,12 @@ body{
 			}
 			&.mark2{
 				background: lightgreen;
+			}
+			&.error{
+				background: lightpink;
+				&.empty{
+					color: lightpink;
+				}
 			}
 		}
 

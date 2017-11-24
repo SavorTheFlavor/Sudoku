@@ -1,5 +1,6 @@
 const Toolkit = require("../core/toolkit")
 const Sudoku = require("../core/sudoku")
+const Checker = require("../core/checker")
 
 
 class Grid{
@@ -40,6 +41,62 @@ class Grid{
 			const $cell = $(e.target);
 			popupNumbers.popup($cell);
 		});
+	}
+	/**
+	 重新生成游戏
+	*/
+	restart(){
+		this.container.empty();
+		this.build();
+	}
+	/**
+	  检查解密结果
+	*/
+	check(){
+		//从页面获取要检查的数据
+		const $rows = this.container.children();
+		const data = $rows.map((rowIndex, div) => {
+			return $(div).children()
+					.map((colIndex, span) => {
+						//不是scala...要加return...
+						return parseInt($(span).text()) || 0;
+					})
+
+		}).toArray()
+		.map($data => $data.toArray())
+
+		const checker = new Checker(data);
+		if(checker.check()){
+			return true;
+		}
+
+		//检查不成功，对错误的地方进行标记
+		const marks = checker.matrixMarks;
+		this.container.children()
+					.each((rowIndex,div) => {
+						$(div).children().each((colIndex,span) => {
+							const $span = $(span);
+							//is(选择器选择的元素) .fixed可以选中含有fixed的span
+							if($span.is(".fixed") || marks[rowIndex][colIndex]){
+								$span.removeClass("error");
+							}else{
+								$span.addClass("error");
+							}
+						})
+					})
+		
+	}
+	/**
+	 重置到游戏开始时的布局
+	*/
+	reset(){
+
+	}
+	/**
+	  清除错误标志
+	*/
+	clear(){
+
 	}
 }
 
